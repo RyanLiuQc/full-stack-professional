@@ -3,9 +3,11 @@ package com.amigoscode.customer;
 import com.amigoscode.exception.DuplicateResourceException;
 import com.amigoscode.exception.RequestValidationException;
 import com.amigoscode.exception.ResourceNotFoundException;
+import com.amigoscode.s3.S3Service;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,12 +19,17 @@ public class CustomerService {
     private final CustomerDTOMapper customerDTOMapper;
     private final PasswordEncoder passwordEncoder;
 
+    // get the s3 service used to connect to the cloud
+    private final S3Service s3Service;
+
     public CustomerService(@Qualifier("jdbc") CustomerDao customerDao,
                            CustomerDTOMapper customerDTOMapper,
-                           PasswordEncoder passwordEncoder) {
+                           PasswordEncoder passwordEncoder,
+                           S3Service s3Service) {
         this.customerDao = customerDao;
         this.customerDTOMapper = customerDTOMapper;
         this.passwordEncoder = passwordEncoder;
+        this.s3Service = s3Service;
     }
 
     public List<CustomerDTO> getAllCustomers() {
@@ -105,6 +112,14 @@ public class CustomerService {
         }
 
         customerDao.updateCustomer(customer);
+    }
+
+    public void uploadCustomerProfileImage(Integer customerId, MultipartFile file) {
+
+    }
+
+    public byte[] getCustomerProfileImage(Integer customerId, MultipartFile file) {
+
     }
 }
 
